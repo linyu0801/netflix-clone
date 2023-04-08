@@ -1,10 +1,14 @@
 // import { getProducts, Product } from '@stripe/firestore-stripe-payments'
-import Head from 'next/head';
+import Head from "next/head";
+import { useRecoilValue } from "recoil";
+import { modalState } from "../atoms/modalAtom";
 // import { useRecoilValue } from 'recoil'
 // import { modalState, movieState } from '../atoms/modalAtom.'
-import Banner from '../components/Banner';
-import Header from '../components/Header';
-import Row from '../components/Row';
+import Banner from "../components/Banner";
+import Header from "../components/Header";
+import Modal from "../components/Modal";
+import Row from "../components/Row";
+import useAuth from "../hooks/useAuth";
 // import Modal from '../components/Modal'
 // import Plans from '../components/Plans'
 // import Row from '../components/Row'
@@ -12,8 +16,8 @@ import Row from '../components/Row';
 // import useList from '../hooks/useList'
 // import useSubscription from '../hooks/useSubscription'
 // import payments from '../lib/stripe'
-import { Movie } from '../typings';
-import requests from '../utils/requests';
+import { Movie } from "../typings";
+import requests from "../utils/requests";
 
 interface Props {
   netflixOriginals: Movie[];
@@ -37,7 +41,11 @@ const Home = ({
   topRated,
   trendingNow,
 }: // products,
-  Props) => {
+Props) => {
+  const { loading } = useAuth();
+  const showModal = useRecoilValue(modalState);
+  if (loading) return null;
+
   return (
     <div className="relative h-screen bg-gradient-to-b">
       <Head>
@@ -47,7 +55,7 @@ const Home = ({
       <Header />
       <main className="relative pl-4 pb-24 lg:space-y-24 lg:pl-16">
         <Banner netflixOriginals={netflixOriginals} />
-        <section className='md:space-y-24'>
+        <section className="md:space-y-24">
           <Row title="Trending Now" movies={trendingNow} />
           <Row title="Top Rated" movies={topRated} />
           <Row title="Action Thrillers" movies={actionMovies} />
@@ -59,7 +67,7 @@ const Home = ({
           <Row title="Documentaries" movies={documentaries} />
         </section>
       </main>
-      {/* Modal */}
+      {showModal && <Modal />}
     </div>
   );
 };

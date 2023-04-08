@@ -1,15 +1,21 @@
-import React, { useState, useEffect } from 'react';
-import Image from 'next/image';
-import { Movie } from '../typings';
-import { baseUrl } from '../constants/movie';
-import { FaPlay } from 'react-icons/fa';
-import { HiInformationCircle } from 'react-icons/hi';
+import React, { useState, useEffect } from "react";
+import Image from "next/image";
+import { Movie } from "../typings";
+import { baseUrl } from "../constants/movie";
+import { FaPlay } from "react-icons/fa";
+import { HiInformationCircle } from "react-icons/hi";
+import { modalState, movieState } from "../atoms/modalAtom";
+import { useRecoilState } from "recoil";
+
 interface Props {
   netflixOriginals: Movie[];
 }
 
 const Banner = ({ netflixOriginals }: Props) => {
   const [movie, setMovie] = useState<Movie | null>(null);
+  const [showModal, setShowModal] = useRecoilState(modalState);
+  const [currentMovie, setCurrentMovie] = useRecoilState(movieState);
+
   useEffect(() => {
     netflixOriginals &&
       setMovie(
@@ -37,7 +43,13 @@ const Banner = ({ netflixOriginals }: Props) => {
           <FaPlay className="h-4 w-4 text-black md:h-7 md:w-7" />
           播放
         </button>
-        <button className="bannerButton bg-[gray]/70">
+        <button
+          className="bannerButton bg-[gray]/70"
+          onClick={() => {
+            setCurrentMovie(movie);
+            setShowModal(true);
+          }}
+        >
           看更多
           <HiInformationCircle className="h-5 w-5 md:h-8 md:w-8" />
         </button>
