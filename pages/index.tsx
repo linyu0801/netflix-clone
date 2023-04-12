@@ -1,4 +1,4 @@
-// import { getProducts, Product } from '@stripe/firestore-stripe-payments'
+import { getProducts, Product } from "@stripe/firestore-stripe-payments";
 import Head from "next/head";
 import { useRecoilValue } from "recoil";
 import { modalState } from "../atoms/modalAtom";
@@ -7,6 +7,7 @@ import { modalState } from "../atoms/modalAtom";
 import Banner from "../components/Banner";
 import Header from "../components/Header";
 import Modal from "../components/Modal";
+import Plans from "../components/Plans";
 import Row from "../components/Row";
 import useAuth from "../hooks/useAuth";
 // import Modal from '../components/Modal'
@@ -15,7 +16,7 @@ import useAuth from "../hooks/useAuth";
 // import useAuth from '../hooks/useAuth'
 // import useList from '../hooks/useList'
 // import useSubscription from '../hooks/useSubscription'
-// import payments from '../lib/stripe'
+import payments from "../lib/stripe";
 import { Movie } from "../typings";
 import requests from "../utils/requests";
 
@@ -28,7 +29,7 @@ interface Props {
   horrorMovies: Movie[];
   romanceMovies: Movie[];
   documentaries: Movie[];
-  // products: Product[]
+  products: Product[];
 }
 
 const Home = ({
@@ -40,14 +41,23 @@ const Home = ({
   romanceMovies,
   topRated,
   trendingNow,
-}: // products,
-Props) => {
+  products,
+}: Props) => {
   const { loading } = useAuth();
   const showModal = useRecoilValue(modalState);
-  if (loading) return null;
+  const subscription = false;
+  console.log(products);
+
+  if (loading || subscription === null) return null;
+
+  if (!subscription) return <Plans />;
 
   return (
-    <div className="relative h-screen bg-gradient-to-b">
+    <div
+      className={`relative h-screen bg-gradient-to-b ${
+        showModal && "!h-screen overflow-hidden"
+      }`}
+    >
       <Head>
         <title>Netflix</title>
         <link rel="icon" href="/favicon.ico" />
@@ -75,6 +85,12 @@ Props) => {
 export default Home;
 
 export const getServerSideProps = async () => {
+  const products = await getProducts(payments, {
+    includePrices: true,
+    activeOnly: true, // 只顯示 firebase中 active 為 true 的資料
+  })
+    .then((res) => res)
+    .catch((e) => console.log(e.message));
   const [
     netflixOriginals,
     trendingNow,
@@ -106,7 +122,7 @@ export const getServerSideProps = async () => {
       horrorMovies: horrorMovies.results,
       romanceMovies: romanceMovies.results,
       documentaries: documentaries.results,
-      // products,
+      products,
     },
   };
 };
