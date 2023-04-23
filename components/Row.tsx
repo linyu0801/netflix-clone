@@ -1,12 +1,14 @@
-import React, { useRef, useState } from 'react';
-import { Movie } from '../typings';
-import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
-import Thumbnail from './Thumbnail';
+import React, { useRef, useState } from "react";
+import { Movie } from "../typings";
+import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
+import Thumbnail from "./Thumbnail";
+import { DocumentData } from "firebase/firestore";
+
 interface Props {
   title: string;
-  movies: Movie[];
-  // movie: Movie | DocumentData; // 使用 firebase時
+  movies: Movie[] | DocumentData[];
 }
+
 const Row = ({ title, movies }: Props) => {
   const rowRef = useRef<HTMLDivElement>(null);
   const [isMoved, setIsMoved] = useState<Boolean>(false);
@@ -15,10 +17,10 @@ const Row = ({ title, movies }: Props) => {
     if (rowRef.current) {
       const { scrollLeft, clientWidth } = rowRef.current;
       const scrollTo =
-        direction === 'left'
+        direction === "left"
           ? scrollLeft - clientWidth
           : scrollLeft + clientWidth;
-      rowRef.current.scrollTo({ left: scrollTo, behavior: 'smooth' });
+      rowRef.current.scrollTo({ left: scrollTo, behavior: "smooth" });
     }
   };
   return (
@@ -33,10 +35,10 @@ const Row = ({ title, movies }: Props) => {
         <IoIosArrowBack
           className={`absolute top-0 bottom-0 left-2 z-40 m-auto h-9 w-6 
           cursor-pointer opacity-0 transition group-hover:opacity-100 hover:scale-125 ${
-            !isMoved && 'hidden'
+            !isMoved && "hidden"
           }`}
           onClick={() => {
-            handleClick('left');
+            handleClick("left");
           }}
         />
         <div
@@ -52,7 +54,7 @@ const Row = ({ title, movies }: Props) => {
           className="absolute top-0 bottom-0 right-2 z-40 m-auto h-9 w-6 
         cursor-pointer opacity-0 transition group-hover:opacity-100 hover:scale-125"
           onClick={() => {
-            handleClick('right');
+            handleClick("right");
           }}
         />
       </div>
@@ -61,4 +63,3 @@ const Row = ({ title, movies }: Props) => {
 };
 
 export default Row;
-

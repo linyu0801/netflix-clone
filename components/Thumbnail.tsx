@@ -3,10 +3,11 @@ import React from "react";
 import { modalState, movieState } from "../atoms/modalAtom";
 import { Movie } from "../typings";
 import { useRecoilState } from "recoil";
+import { DocumentData } from "firebase/firestore";
 
 interface Props {
-  movie: Movie;
-  // movie: Movie | DocumentData; // 使用 firebase時
+  // movie: Movie;
+  movie: Movie | DocumentData; // 使用 firebase時
 }
 const Thumbnail = ({ movie }: Props) => {
   const [showModal, setShowModal] = useRecoilState(modalState);

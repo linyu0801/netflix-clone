@@ -4,10 +4,20 @@ import { useRecoilState } from "recoil";
 import { modalState, movieState } from "../atoms/modalAtom";
 import { Element, Genre, Movie } from "../typings";
 import ReactPlayer from "react-player/lazy";
-import { FaPlay, FaPlus } from "react-icons/fa";
+import { FaCheck, FaPlay, FaPlus } from "react-icons/fa";
 import { HiOutlineThumbUp } from "react-icons/hi";
 import { BsVolumeUp, BsVolumeMute } from "react-icons/bs";
-// import { AiOutlineClose } from "react-icons/ai";
+import useAuth from "../hooks/useAuth";
+import toast, { Toaster } from "react-hot-toast";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  DocumentData,
+  onSnapshot,
+  setDoc,
+} from "firebase/firestore";
+import { db } from "../firebase";
 
 const Modal = () => {
   const [showModal, setShowModal] = useRecoilState(modalState);
@@ -15,9 +25,22 @@ const Modal = () => {
   const [trailer, setTrailer] = useState("");
   const [genres, setGenres] = useState<Genre[]>([]);
   const [muted, setMuted] = useState(true);
+  const [addedToList, setAddedToList] = useState(false);
+  const { user } = useAuth();
+  const [movies, setMovies] = useState<DocumentData[] | Movie[]>([]);
+
+  const toastStyle = {
+    background: "white",
+    color: "black",
+    fontWeight: "bold",
+    fontSize: "16px",
+    padding: "15px",
+    borderRadius: "9999px",
+    maxWidth: "1000px",
+  };
+
   useEffect(() => {
     if (!movie) return;
-    console.log(movie);
 
     const getMovie = async () => {
       // append_to_response=videos 回傳影片 只適用回傳單一影片時
@@ -47,6 +70,56 @@ const Modal = () => {
 
   const handleClose = () => {
     setShowModal(false);
+    setMovie(null);
+    toast.dismiss();
+  };
+
+  // Find all the movies in the user's list
+  useEffect(() => {
+    if (user) {
+      return onSnapshot(
+        collection(db, "customers", user.uid, "myList"),
+        (snapshot) => setMovies(snapshot.docs)
+      );
+    }
+  }, [db, movie?.id]);
+
+  // Check if the movie is already in the user's list
+  useEffect(
+    () =>
+      setAddedToList(
+        movies.findIndex((result) => result.data().id === movie?.id) !== -1
+      ),
+    [movies]
+  );
+  useEffect(() => {
+    console.log({ addedToList });
+  }, [addedToList]);
+
+  // myList 為 customer 內的一個欄位紀錄 customer 收藏的影片
+  const handleList = async () => {
+    if (addedToList) {
+      await deleteDoc(
+        doc(db, "customers", user!.uid, "myList", movie?.id.toString()!)
+      );
+
+      toast(`${movie?.title || movie?.original_name}已從我的收藏移除`, {
+        duration: 8000,
+        style: toastStyle,
+      });
+    } else {
+      await setDoc(
+        doc(db, "customers", user!.uid, "myList", movie?.id.toString()!),
+        {
+          ...movie,
+        }
+      );
+
+      toast(`${movie?.title || movie?.original_name}已新增到我的收藏`, {
+        duration: 8000,
+        style: toastStyle,
+      });
+    }
   };
 
   return (
@@ -57,6 +130,7 @@ const Modal = () => {
       rounded-md scrollbar-hide "
     >
       <>
+        <Toaster position="bottom-center" />
         <button
           onClick={handleClose}
           className="modalButton absolute right-5 top-5 !z-40 h-9 w-9 border-none bg-[#181818]
@@ -93,8 +167,12 @@ const Modal = () => {
                 <FaPlay className="h-8 w-7 text-black" />
                 播放
               </button>
-              <button className="modalButton ">
-                <FaPlus className="h-7 w-7" />
+              <button className="modalButton " onClick={handleList}>
+                {addedToList ? (
+                  <FaCheck className="h-7 w-7" />
+                ) : (
+                  <FaPlus className="h-7 w-7" />
+                )}
               </button>
               <button className="modalButton ">
                 <HiOutlineThumbUp className="h-7 w-7" />
