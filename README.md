@@ -11,14 +11,12 @@ Demo：https://netflix-clone-linyu0801.vercel.app/
 1.Clone 這個專案：
 
 ```bash
-Copy code
 git clone https://github.com/yourusername/netflix-clone.git
 ```
 
 2.安裝相依套件：
 
 ```bash
-Copy code
 cd netflix-clone
 npm install
 ```
@@ -26,14 +24,12 @@ npm install
 3.在根目錄下新增 .env.local 檔案，並加入以下設定：
 
 ```bash
-Copy code
 NEXT_PUBLIC_API_KEY=your_tmdb_api_key
 ```
 
 開啟開發伺服器：
 
 ```bash
-Copy code
 npm run dev
 ```
 
