@@ -1,16 +1,16 @@
-import { collection, DocumentData, onSnapshot } from "firebase/firestore";
-import { useEffect, useState } from "react";
-import { db } from "../firebase";
-import { Movie } from "../typings";
+import { collection, DocumentData, onSnapshot } from 'firebase/firestore';
+import { useEffect, useState } from 'react';
+import { db } from '../firebase';
+import { Movie } from '../typings';
 
-//  回傳我的收藏內資料
+//  回傳我的片單內資料
 const useList = (uid: string | undefined) => {
   const [list, setList] = useState<DocumentData[] | Movie[]>([]);
 
   useEffect(() => {
     if (!uid) return;
     return onSnapshot(
-      collection(db, "customers", uid, "myList"),
+      collection(db, 'customers', uid, 'myList'),
       (snapshot) => {
         setList(
           snapshot.docs.map((doc) => ({

@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import Dialog from "@mui/material/Modal";
-import { useRecoilState } from "recoil";
-import { modalState, movieState } from "../atoms/modalAtom";
-import { Element, Genre, Movie } from "../typings";
-import ReactPlayer from "react-player/lazy";
-import { FaCheck, FaPlay, FaPlus } from "react-icons/fa";
-import { HiOutlineThumbUp } from "react-icons/hi";
-import { BsVolumeUp, BsVolumeMute } from "react-icons/bs";
-import useAuth from "../hooks/useAuth";
-import toast, { Toaster } from "react-hot-toast";
+import React, { useEffect, useState } from 'react';
+import Dialog from '@mui/material/Modal';
+import { useRecoilState } from 'recoil';
+import { modalState, movieState } from '../atoms/modalAtom';
+import { Element, Genre, Movie } from '../typings';
+import ReactPlayer from 'react-player/lazy';
+import { FaCheck, FaPlay, FaPlus } from 'react-icons/fa';
+import { HiOutlineThumbUp } from 'react-icons/hi';
+import { BsVolumeUp, BsVolumeMute } from 'react-icons/bs';
+import useAuth from '../hooks/useAuth';
+import toast, { Toaster } from 'react-hot-toast';
 import {
   collection,
   deleteDoc,
@@ -16,13 +16,13 @@ import {
   DocumentData,
   onSnapshot,
   setDoc,
-} from "firebase/firestore";
-import { db } from "../firebase";
+} from 'firebase/firestore';
+import { db } from '../firebase';
 
 const Modal = () => {
   const [showModal, setShowModal] = useRecoilState(modalState);
   const [movie, setMovie] = useRecoilState(movieState);
-  const [trailer, setTrailer] = useState("");
+  const [trailer, setTrailer] = useState('');
   const [genres, setGenres] = useState<Genre[]>([]);
   const [muted, setMuted] = useState(true);
   const [addedToList, setAddedToList] = useState(false);
@@ -30,13 +30,13 @@ const Modal = () => {
   const [movies, setMovies] = useState<DocumentData[] | Movie[]>([]);
 
   const toastStyle = {
-    background: "white",
-    color: "black",
-    fontWeight: "bold",
-    fontSize: "16px",
-    padding: "15px",
-    borderRadius: "9999px",
-    maxWidth: "1000px",
+    background: 'white',
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: '16px',
+    padding: '15px',
+    borderRadius: '9999px',
+    maxWidth: '1000px',
   };
 
   useEffect(() => {
@@ -46,7 +46,7 @@ const Modal = () => {
       // append_to_response=videos 回傳影片 只適用回傳單一影片時
       const data = await fetch(
         `https://api.themoviedb.org/3/${
-          movie?.media_type === "tv" ? "tv" : "movie"
+          movie?.media_type === 'tv' ? 'tv' : 'movie'
         }/${movie?.id}?api_key=${
           process.env.NEXT_PUBLIC_API_KEY
         }&language=en-US&append_to_response=videos`
@@ -57,9 +57,9 @@ const Modal = () => {
 
       if (data?.videos) {
         const trailerData = data.videos.results.find(
-          (el: Element) => el.type === "Trailer"
+          (el: Element) => el.type === 'Trailer'
         );
-        setTrailer(trailerData?.key || "");
+        setTrailer(trailerData?.key || '');
       }
       if (data?.genres) {
         setGenres(data.genres);
@@ -78,7 +78,7 @@ const Modal = () => {
   useEffect(() => {
     if (user) {
       return onSnapshot(
-        collection(db, "customers", user.uid, "myList"),
+        collection(db, 'customers', user.uid, 'myList'),
         (snapshot) => setMovies(snapshot.docs)
       );
     }
@@ -100,7 +100,7 @@ const Modal = () => {
   const handleList = async () => {
     if (addedToList) {
       await deleteDoc(
-        doc(db, "customers", user!.uid, "myList", movie?.id.toString()!)
+        doc(db, 'customers', user!.uid, 'myList', movie?.id.toString()!)
       );
 
       toast(`${movie?.title || movie?.original_name}已從我的收藏移除`, {
@@ -109,7 +109,7 @@ const Modal = () => {
       });
     } else {
       await setDoc(
-        doc(db, "customers", user!.uid, "myList", movie?.id.toString()!),
+        doc(db, 'customers', user!.uid, 'myList', movie?.id.toString()!),
         {
           ...movie,
         }
@@ -126,8 +126,8 @@ const Modal = () => {
     <Dialog
       open={showModal}
       onClose={handleClose}
-      className=" fixed !top-7 left-0 right-0 z-50 mx-auto w-full max-w-5xl overflow-hidden overflow-y-scroll
-      rounded-md scrollbar-hide "
+      className="fixed !top-7 left-0 right-0 z-50 mx-auto w-full max-w-5xl overflow-hidden overflow-y-scroll rounded-md
+      px-4 scrollbar-hide "
     >
       <>
         <Toaster position="bottom-center" />
@@ -136,7 +136,6 @@ const Modal = () => {
           className="modalButton absolute right-5 top-5 !z-40 h-9 w-9 border-none bg-[#181818]
           hover:bg-[#181818]"
         >
-          {/* <AiOutlineClose className="w-6" />           */}
           <svg
             className="h-6 w-6 fill-current"
             viewBox="0 0 24 24"
@@ -154,28 +153,28 @@ const Modal = () => {
             url={`https://www.youtube.com/watch?v=${trailer}`}
             width="100%"
             height="100%"
-            style={{ position: "absolute", top: "0", left: "0" }}
+            style={{ position: 'absolute', top: '0', left: '0' }}
             playing
             muted={muted}
           />
-          <div className="absolute bottom-10 flex w-full items-center justify-between px-10">
+          <div className="absolute bottom-4 flex w-full items-center justify-between px-10 sm:bottom-10">
             <div className="flex space-x-2">
               <button
-                className="transision flex items-center gap-x-2 rounded bg-white px-8 text-xl font-bold
-              text-black hover:bg-[#e6e6e6]"
+                className="transision text=sm flex items-center gap-x-2 rounded bg-white px-4 font-bold text-black hover:bg-[#e6e6e6]
+              sm:px-8 sm:text-xl"
               >
-                <FaPlay className="h-8 w-7 text-black" />
+                <FaPlay className="h-5 w-4 text-black sm:h-8 sm:w-7" />
                 播放
               </button>
               <button className="modalButton " onClick={handleList}>
                 {addedToList ? (
-                  <FaCheck className="h-7 w-7" />
+                  <FaCheck className="h-4 w-4 sm:h-7 sm:w-7" />
                 ) : (
-                  <FaPlus className="h-7 w-7" />
+                  <FaPlus className="h-4 w-4 sm:h-7 sm:w-7" />
                 )}
               </button>
               <button className="modalButton ">
-                <HiOutlineThumbUp className="h-7 w-7" />
+                <HiOutlineThumbUp className="h-4 w-4 sm:h-7 sm:w-7" />
               </button>
             </div>
             <button
@@ -183,16 +182,16 @@ const Modal = () => {
               onClick={() => setMuted((prev) => !prev)}
             >
               {muted ? (
-                <BsVolumeMute className="h-7 w-7" />
+                <BsVolumeMute className="h-4 w-4 sm:h-7 sm:w-7" />
               ) : (
-                <BsVolumeUp className="h-7 w-7" />
+                <BsVolumeUp className="h-4 w-4 sm:h-7 sm:w-7" />
               )}
             </button>
           </div>
         </div>
-        <div className="flex space-x-16 rounded-b-md bg-[#181818] px-10 py-8">
+        <div className="flex space-x-16 rounded-b-md bg-[#181818] px-5 py-8 sm:px-10">
           <div className="space-y-6 text-lg ">
-            <div className="flex items-center space-x-2 text-sm ">
+            <div className="flex items-center space-x-2 text-xs sm:text-sm ">
               <p className="font-semibold text-green-400">
                 {movie!.vote_average * 10}% 適合您
               </p>
@@ -211,7 +210,7 @@ const Modal = () => {
               <div className="flex flex-col space-y-3 text-sm">
                 <div>
                   <span className="text-[gray]">Genres: </span>
-                  {genres.map((genre) => genre.name).join(", ")}
+                  {genres.map((genre) => genre.name).join(', ')}
                 </div>
                 <div>
                   <span className="text-[gray]">Original language: </span>

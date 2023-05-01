@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { GoSearch } from "react-icons/go";
-import { AiFillBell } from "react-icons/ai";
-import Link from "next/link";
-import useAuth from "../hooks/useAuth";
-import BasicMenu from "./BasicMenu";
+import React, { useState, useEffect } from 'react';
+import { GoSearch } from 'react-icons/go';
+import { AiFillBell } from 'react-icons/ai';
+import Link from 'next/link';
+import BasicMenu from './BasicMenu';
 
 const Header = () => {
   const [isScroll, setIsScroll] = useState(false);
-  const { logout } = useAuth();
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 0) {
@@ -16,12 +14,12 @@ const Header = () => {
         setIsScroll(false);
       }
     };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
-    <header className={`${isScroll && "bg-[#141414]"}`}>
+    <header className={`${isScroll && 'bg-[#141414]'}`}>
       <div className="flex items-center space-x-2 md:space-x-10">
         <img
           src="https://upload.wikimedia.org/wikipedia/commons/0/08/Netflix_2015_logo.svg"
@@ -32,16 +30,16 @@ const Header = () => {
         />
         <BasicMenu />
         <ul className="hidden space-x-4 md:flex">
-          <li className="headerLink">Home</li>
-          <li className="headerLink">TV Shows</li>
-          <li className="headerLink">Movies</li>
-          <li className="headerLink">New & Popular</li>
-          <li className="headerLink">My List</li>
+          <li className="headerLink">首頁</li>
+          <li className="headerLink">節目</li>
+          <li className="headerLink">電影</li>
+          <li className="headerLink">最新熱門影片</li>
+          <li className="headerLink">我的片單</li>
         </ul>
       </div>
       <div className="flex items-center space-x-4 text-sm font-light">
         <GoSearch className="hidden h-6 w-6 sm:inline" />
-        <p className="hidden lg:inline">Kids</p>
+        <p className="hidden lg:inline">兒童專區</p>
         <AiFillBell className="hidden h-6 w-6 sm:inline" />
         <Link href="/account">
           <img
