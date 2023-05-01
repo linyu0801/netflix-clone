@@ -1,7 +1,7 @@
 import { getProducts, Product } from '@stripe/firestore-stripe-payments';
 import { useRecoilValue } from 'recoil';
 import { Movie } from '../typings';
-import { modalState, movieState } from '../atoms/modalAtom';
+import { modalState } from '../atoms/modalAtom';
 import Head from 'next/head';
 import Banner from '../components/Banner';
 import Header from '../components/Header';
@@ -40,10 +40,9 @@ const Home = ({
   const { loading, user } = useAuth();
   const showModal = useRecoilValue(modalState);
   const subscription = useSubscription(user);
-  const movie = useRecoilValue(movieState);
   const list = useList(user?.uid);
 
-  if (loading || subscription === null) return null;
+  if (loading) return null;
 
   if (!subscription) return <Plans products={products} />;
 
