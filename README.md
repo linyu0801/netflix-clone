@@ -27,13 +27,13 @@ npm install
 NEXT_PUBLIC_API_KEY=your_tmdb_api_key
 ```
 
-開啟開發伺服器：
+4.開啟開發伺服器：
 
 ```bash
 npm run dev
 ```
 
-在瀏覽器中開啟 http://localhost:3000 進行測試。
+5.在瀏覽器中開啟 http://localhost:3000 進行測試。
 
 Stripe 測試環境請使用 https://stripe.com/docs/testing 作為假信用卡使用。
 
