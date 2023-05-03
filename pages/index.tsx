@@ -13,6 +13,8 @@ import useList from '../hooks/useList';
 import useSubscription from '../hooks/useSubscription';
 import payments from '../lib/stripe';
 import requests from '../utils/requests';
+import { loadingState } from '../atoms/loadingAtom';
+import Loader from '../components/Loader';
 
 interface Props {
   netflixOriginals: Movie[];
@@ -37,12 +39,18 @@ const Home = ({
   trendingNow,
   products,
 }: Props) => {
-  const { loading, user } = useAuth();
+  const { user } = useAuth();
   const showModal = useRecoilValue(modalState);
+  const loading = useRecoilValue(loadingState);
   const subscription = useSubscription(user);
   const list = useList(user?.uid);
 
-  if (loading) return null;
+  if (loading || subscription === null)
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader color="fill-gray-400" />
+      </div>
+    );
 
   if (!subscription) return <Plans products={products} />;
 

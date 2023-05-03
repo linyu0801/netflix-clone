@@ -1,15 +1,16 @@
-import { async } from "@firebase/util";
 import {
   createUserWithEmailAndPassword,
   onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
   User,
-} from "firebase/auth";
+} from 'firebase/auth';
 
-import { useRouter } from "next/router";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { auth } from "../firebase";
+import { useRouter } from 'next/router';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { auth } from '../firebase';
+import { loadingState } from '../atoms/loadingAtom';
+import { useRecoilState } from 'recoil';
 
 interface IAuth {
   user: User | null;
@@ -17,7 +18,6 @@ interface IAuth {
   signIn: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   error: string | null;
-  loading: boolean;
 }
 
 const AuthContext = createContext<IAuth>({
@@ -26,7 +26,6 @@ const AuthContext = createContext<IAuth>({
   signIn: async () => {},
   logout: async () => {},
   error: null,
-  loading: false,
 });
 
 interface AuthProviderProps {
@@ -35,30 +34,29 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [initialLoading, setInitialLoading] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useRecoilState(loadingState);
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState(null);
+
   const router = useRouter();
 
   // presist user狀態
-  useEffect(
-    () =>
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          // Logged in...
-          setUser(user);
-          setLoading(false);
-        } else {
-          // Not logged in...
-          setUser(null);
-          setLoading(true);
-          router.push("/login");
-        }
+  useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        // Logged in...
+        setUser(user);
+        setLoading(false);
+      } else {
+        // Not logged in...
+        setUser(null);
+        setLoading(true);
+        router.push('/login');
+      }
 
-        setInitialLoading(false);
-      }),
-    [auth]
-  );
+      setInitialLoading(false);
+    });
+  }, [auth]);
 
   const signUp = async (email: string, password: string) => {
     setLoading(true);
@@ -66,7 +64,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       .then((userCredentail) => {
         setUser(userCredentail.user);
         setLoading(false);
-        router.push("/");
+        router.push('/');
       })
       .catch((e) => alert(e))
       .finally(() => setLoading(false));
@@ -78,7 +76,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       .then((userCredentail) => {
         setUser(userCredentail.user);
         setLoading(false);
-        router.push("/");
+        router.push('/');
       })
       .catch((e) => alert(e))
       .finally(() => setLoading(false));
@@ -91,16 +89,16 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       .catch((error) => console.log(error))
       .finally(() => setLoading(false));
   };
+
   const memoedValue = useMemo(
     () => ({
       user,
       signUp,
       signIn,
-      loading,
       logout,
       error,
     }),
-    [user, loading]
+    [user]
   );
 
   return (
