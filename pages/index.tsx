@@ -39,11 +39,11 @@ const Home = ({
   trendingNow,
   products,
 }: Props) => {
-  const { user } = useAuth();
-  const showModal = useRecoilValue(modalState);
-  const loading = useRecoilValue(loadingState);
-  const subscription = useSubscription(user);
-  const list = useList(user?.uid);
+  // const { user } = useAuth();
+  // const showModal = useRecoilValue(modalState);
+  // const loading = useRecoilValue(loadingState);
+  // const subscription = useSubscription(user);
+  // const list = useList(user?.uid);
 
   // if (loading || subscription === null)
   //   return (
@@ -57,7 +57,8 @@ const Home = ({
   return (
     <div
       className={`relative h-screen bg-gradient-to-b ${
-        showModal && '!h-screen overflow-hidden'
+        ''
+        // showModal && '!h-screen overflow-hidden'
       }`}
     >
       <Head>
@@ -70,7 +71,7 @@ const Home = ({
       </Head>
       <Header />
       <main className="relative pl-4 pb-24 lg:space-y-24 lg:pl-16">
-        <Banner netflixOriginals={netflixOriginals} />
+        {/* <Banner netflixOriginals={netflixOriginals} />
         <section className="md:space-y-24">
           <Row title="現正熱門" movies={trendingNow} />
           <Row title="最高評價" movies={topRated} />
@@ -80,9 +81,9 @@ const Home = ({
           <Row title="恐怖片" movies={horrorMovies} />
           <Row title="浪漫愛情片" movies={romanceMovies} />
           <Row title="紀錄片" movies={documentaries} />
-        </section>
+        </section> */}
       </main>
-      {showModal && <Modal />}
+      {/* {showModal && <Modal />} */}
     </div>
   );
 };
