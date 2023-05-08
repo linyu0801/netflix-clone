@@ -17,7 +17,6 @@ interface IAuth {
   signUp: (email: string, password: string) => Promise<void>;
   signIn: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
-  error: string | null;
 }
 
 const AuthContext = createContext<IAuth>({
@@ -25,7 +24,6 @@ const AuthContext = createContext<IAuth>({
   signUp: async () => {},
   signIn: async () => {},
   logout: async () => {},
-  error: null,
 });
 
 interface AuthProviderProps {
@@ -36,7 +34,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [initialLoading, setInitialLoading] = useState(true);
   const [loading, setLoading] = useRecoilState(loadingState);
   const [user, setUser] = useState<User | null>(null);
-  const [error, setError] = useState(null);
 
   const router = useRouter();
 
@@ -51,7 +48,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         // Not logged in...
         setUser(null);
         setLoading(true);
-        // router.push('/login');
+        router.push('/login');
       }
 
       setInitialLoading(false);
@@ -96,7 +93,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       signUp,
       signIn,
       logout,
-      error,
     }),
     [user]
   );
