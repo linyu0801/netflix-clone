@@ -19,13 +19,9 @@ const Login = () => {
   } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async ({ email, password }) => {
-    console.log(email, password);
     if (login) {
-      console.log(signIn);
-
       await signIn(email, password);
     } else {
-      console.log(signUp);
       await signUp(email, password);
     }
   };
@@ -38,6 +34,10 @@ const Login = () => {
       <Head>
         <title>Netflix</title>
         <link rel="icon" href="/favicon.ico" />
+        <meta
+          name="google-site-verification"
+          content="PrfXYvrtm3WKY2e6tgMntACI12qpjrzYETac2YjP_nY"
+        />
       </Head>
       <Image
         src="https://assets.nflxext.com/ffe/siteui/vlv3/d0982892-13ac-4702-b9fa-87a410c1f2da/519e3d3a-1c8c-4fdb-8f8a-7eabdbe87056/AE-en-20220321-popsignuptwoweeks-perspective_alpha_website_large.jpg"

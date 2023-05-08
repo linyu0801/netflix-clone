@@ -45,14 +45,14 @@ const Home = ({
   const subscription = useSubscription(user);
   const list = useList(user?.uid);
 
-  if (loading || subscription === null)
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <Loader color="fill-gray-400" />
-      </div>
-    );
+  // if (loading || subscription === null)
+  //   return (
+  //     <div className="flex h-screen items-center justify-center">
+  //       <Loader color="fill-gray-400" />
+  //     </div>
+  //   );
 
-  if (!subscription) return <Plans products={products} />;
+  // if (!subscription) return <Plans products={products} />;
 
   return (
     <div
