@@ -61,7 +61,7 @@ const Home = ({
       }`}
     >
       <Head>
-        <title>Netflix</title>
+        <title>首頁</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Header />

@@ -19,25 +19,25 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase';
 
+const toastStyle = {
+  background: 'white',
+  color: 'black',
+  fontWeight: 'bold',
+  fontSize: '16px',
+  padding: '15px',
+  borderRadius: '9999px',
+  maxWidth: '1000px',
+};
+
 const Modal = () => {
   const [showModal, setShowModal] = useRecoilState(modalState);
   const [movie, setMovie] = useRecoilState(movieState);
   const [trailer, setTrailer] = useState('');
   const [genres, setGenres] = useState<Genre[]>([]);
   const [muted, setMuted] = useState(true);
-  const [addedToList, setAddedToList] = useState(false);
-  const { user } = useAuth();
   const [movies, setMovies] = useState<DocumentData[] | Movie[]>([]);
-
-  const toastStyle = {
-    background: 'white',
-    color: 'black',
-    fontWeight: 'bold',
-    fontSize: '16px',
-    padding: '15px',
-    borderRadius: '9999px',
-    maxWidth: '1000px',
-  };
+  const { user } = useAuth();
+  const addedToList = movies.some((result) => result.data().id === movie?.id);
 
   useEffect(() => {
     if (!movie) return;
@@ -53,8 +53,6 @@ const Modal = () => {
       )
         .then((res) => res.json())
         .catch((e) => console.log(e));
-      console.log(data);
-
       if (data?.videos) {
         const trailerData = data.videos.results.find(
           (el: Element) => el.type === 'Trailer'
@@ -83,18 +81,6 @@ const Modal = () => {
       );
     }
   }, [db, movie?.id]);
-
-  // Check if the movie is already in the user's list
-  useEffect(
-    () =>
-      setAddedToList(
-        movies.findIndex((result) => result.data().id === movie?.id) !== -1
-      ),
-    [movies]
-  );
-  useEffect(() => {
-    console.log({ addedToList });
-  }, [addedToList]);
 
   // myList 為 customer 內的一個欄位紀錄 customer 收藏的影片
   const handleList = async () => {

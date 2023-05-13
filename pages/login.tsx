@@ -32,7 +32,7 @@ const Login = () => {
         md:justify-center md:bg-transparent"
     >
       <Head>
-        <title>Netflix</title>
+        <title>登入</title>
         <link rel="icon" href="/favicon.ico" />
         <meta
           name="google-site-verification"

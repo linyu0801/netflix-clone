@@ -1,27 +1,21 @@
-import React, { useState, useEffect } from "react";
-import Image from "next/image";
-import { Movie } from "../typings";
-import { baseUrl } from "../constants/movie";
-import { FaPlay } from "react-icons/fa";
-import { HiInformationCircle } from "react-icons/hi";
-import { modalState, movieState } from "../atoms/modalAtom";
-import { useRecoilState } from "recoil";
+import React from 'react';
+import Image from 'next/image';
+import { Movie } from '../typings';
+import { baseUrl } from '../constants/movie';
+import { FaPlay } from 'react-icons/fa';
+import { HiInformationCircle } from 'react-icons/hi';
+import { modalState, movieState } from '../atoms/modalAtom';
+import { useRecoilState } from 'recoil';
 
 interface Props {
   netflixOriginals: Movie[];
 }
 
 const Banner = ({ netflixOriginals }: Props) => {
-  const [movie, setMovie] = useState<Movie | null>(null);
   const [showModal, setShowModal] = useRecoilState(modalState);
   const [currentMovie, setCurrentMovie] = useRecoilState(movieState);
-
-  useEffect(() => {
-    netflixOriginals &&
-      setMovie(
-        netflixOriginals[Math.floor(Math.random() * netflixOriginals?.length)]
-      );
-  }, [netflixOriginals]);
+  const movie: Movie =
+    netflixOriginals[Math.floor(Math.random() * netflixOriginals?.length)];
 
   return (
     <div className="flex flex-col gap-y-2 py-16 md:gap-y-4 lg:h-[65vh] lg:justify-end lg:pb-12">

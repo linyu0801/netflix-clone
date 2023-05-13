@@ -28,7 +28,7 @@ const Plans = ({ products }: Props) => {
   return (
     <div>
       <Head>
-        <title>Netflix</title>
+        <title>訂閱</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <header className="border-b border-white/10 bg-[#141414]">
