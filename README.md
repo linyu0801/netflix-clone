@@ -2,7 +2,7 @@
 
 這是一個使用 Next.js、TypeScript、Tailwind、Firebase、Stripe、Recoil、以及串接 tmdb api 建構而成的 Netflix clone 專案。
 
-Demo：https://netflix-clone-linyu0801.vercel.app/
+Demo：https://next-project-linyu0801.vercel.app
 
 ## 如何使用
 
@@ -49,5 +49,4 @@ RWD 切版，支援不同的裝置大小。
 
 本專案僅作為個人練習使用，不用於商業用途。
 
-License
 MIT License
